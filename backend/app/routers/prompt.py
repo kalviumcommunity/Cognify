@@ -11,6 +11,7 @@ class PromptTestRequest(BaseModel):
     answer_key: str = ""
     student_profile: str = ""
     constraints: str = ""
+    temperature: float | None = None  # Optional per-request override
 
 class PromptTestResponse(BaseModel):
     provider: str
@@ -28,9 +29,9 @@ async def prompt_test(body: PromptTestRequest):
         constraints=body.constraints,
     )
 
-    # Call provider
+    # Call provider with optional temperature override
     svc = LLMService()
-    result = await svc.generate(system_prompt, user_prompt)
+    result = await svc.generate(system_prompt, user_prompt, temperature=body.temperature)
 
     if "error" in result:
         return PromptTestResponse(provider=config.provider, output=f"ERROR: {result['error']}")
