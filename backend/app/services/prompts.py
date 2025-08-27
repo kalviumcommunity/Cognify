@@ -27,6 +27,8 @@ def _load_prompts_from_python_file():
 @dataclass
 class PromptConfig:
     provider: str = os.getenv("PROVIDER", "gemini").lower()
+    # Default temperature for sampling (can be overridden per-request)
+    temperature: float = float(os.getenv("TEMPERATURE", "0.7"))
     system_prompt: str = os.getenv(
         "SYSTEM_PROMPT",
         "You are an AI tutor that analyzes student answers, detects concept gaps, and suggests targeted learning resources.",
